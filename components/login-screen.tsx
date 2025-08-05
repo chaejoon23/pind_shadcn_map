@@ -30,7 +30,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
       formData.append("username", email)
       formData.append("password", password)
 
-      const response = await fetch("http://localhost:9002/auth/login", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
         method: "POST",
         body: formData,
       })
