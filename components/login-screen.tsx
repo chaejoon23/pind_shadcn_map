@@ -17,9 +17,36 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [error, setError] = useState<string | null>(null)
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    onLogin()
+    console.log("handleSubmit triggered");
+    console.log("Email:", email, "Password:", password);
+    setError(null)
+
+    try {
+      const formData = new FormData()
+      formData.append("username", email)
+      formData.append("password", password)
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
+        method: "POST",
+        body: formData,
+      })
+
+      if (response.ok) {
+        console.log("Login successful");
+        onLogin()
+      } else {
+        const data = await response.json()
+        console.error("Login failed with status:", response.status, "and message:", data.message);
+        setError(data.message || "Login failed")
+      }
+    } catch (error) {
+      console.error("Fetch failed:", error);
+      setError("An unexpected error occurred.")
+    }
   }
 
   return (
@@ -60,6 +87,11 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <span className="block sm:inline">{error}</span>
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input

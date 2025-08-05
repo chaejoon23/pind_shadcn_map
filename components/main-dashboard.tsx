@@ -184,11 +184,10 @@ export function MainDashboard() {
           view={mobileView}
           videos={mockVideos}
           selectedVideos={selectedVideos}
-          selectedLocations={selectedLocations}
           selectedLocation={selectedLocation}
           onClose={() => setShowMobileOverlay(false)}
           onVideoToggle={handleVideoToggle}
-          onLocationSelect={handleLocationSelect}
+          onVideoClick={handleVideoClick}
           onBackToList={() => setMobileView("list")}
         />
       </div>
